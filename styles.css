@@ -1,0 +1,371 @@
+/* ==========================================================================
+   Varo — styles.css
+   Static site, no build step. Everything colour-related lives in the token
+   block below; nothing else in this file or the repo carries a colour value.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fonts — self-hosted variable files (OFL). Never the Google Fonts API.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('fonts/Fraunces-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/DMSans-var.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/DMMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* PRIMARY FAMILY, settled by eye exam 16 Aug 2026 (brand/10-color.md).
+     Usage: two layers per ground. Light grounds: blue labels (eyebrows, terms,
+     numerals), ink reading. Dark grounds: light-blue labels, paper reading.
+     Buttons: light-blue fill with ink text on both grounds; nav CTA is a
+     paper ghost. Contrast, WCAG, computed:
+       ink on paper 19.0 · blue on paper 5.0 · ink on light (button) 13.6
+       light on dark 13.6 · paper on dark 19.0 · muted on paper 6.9 */
+  --paper:       #FAFDFF;   /* background blue: light-band ground, text on dark */
+  --ink:         #000F19;   /* dark blue: text on light, dark-band ground */
+  --blue:        #037795;   /* the label blue on light grounds: 5.0 on paper */   /* the signal: CTA button on both grounds, eyebrows and terms on light */
+  --light:       #B8DEED;   /* light blue: panels; eyebrows and secondary text on dark */
+  --muted:       #465C64;   /* secondary text on light */
+  --rule:        #D1E1E8;
+  --panel:       #E6F3F8;   /* raised panel on paper */
+  --dark:        #000F19;
+  --dark-panel:  #041D2A;
+  --dark-text:   #FAFDFF;
+  --dark-muted:  #859DA6;   /* tertiary on dark: terms lines, mono notes */
+  --dark-rule:   #233640;
+  --marker-bg:   #FFE600;   /* [[BEN: ...]] placeholder markers only. Never for content. */
+  --marker-ink:  #141414;
+
+  /* Type — brand typography spec, "Implementation across surfaces" */
+  --font-display: 'Fraunces';
+  --font-text:    'DM Sans';
+  --font-mono:    'DM Mono';
+  --display-axes: 'SOFT' 0, 'WONK' 0, 'opsz' 31;
+
+  /* Scale */
+  --h1:     clamp(42px, 6.4vw, 66px);
+  --h2:     clamp(32px, 4vw, 40px);
+  --poster: clamp(52px, 8.8vw, 92px);
+  --title:  18px;
+  --lede:   18px;
+  --body:   16.5px;
+  --small:  15px;
+  --eyebrow: 12px;
+  --numeral: 13px;
+  --label:  11px;
+
+  /* Layout */
+  --wrap:   1120px;
+  --gutter: clamp(20px, 5vw, 48px);
+  --band-y: clamp(72px, 10vw, 128px);
+  --measure-body: 62ch;
+  --measure-lede: 56ch;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text), system-ui, sans-serif;
+  font-size: var(--body);
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+h1, h2, h3, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+strong { font-weight: 600; }
+
+.wrap {
+  width: min(var(--wrap), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Type roles
+   -------------------------------------------------------------------------- */
+.display {
+  font-family: var(--font-display), serif;
+  font-variation-settings: var(--display-axes);
+  font-weight: 580;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.band-dark .display {
+  font-weight: 550;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Tracking taper: set per size class, never globally. */
+.display--h1     { font-size: var(--h1);     letter-spacing: -0.02em;  max-width: 20ch; }
+.display--h2     { font-size: var(--h2);     letter-spacing: -0.01em;  line-height: 1.12; max-width: 26ch; }
+.display--poster { font-size: var(--poster); letter-spacing: -0.02em;  font-weight: 700; max-width: 22ch; }
+.display--wordmark { font-size: 20px; letter-spacing: 0.14em; font-weight: 600; line-height: 1; text-transform: uppercase; }
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 500;
+  font-size: var(--eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.mono--numeral { font-size: var(--numeral); }
+.mono--label   { font-size: var(--label); }
+
+.eyebrow { color: var(--blue); display: block; margin-bottom: 20px; }
+.band-dark .eyebrow { color: var(--light); }
+
+.lede  { font-size: var(--lede); line-height: 1.5; max-width: var(--measure-lede); }
+.body  { max-width: var(--measure-body); }
+.muted { color: var(--muted); }
+.band-dark .muted { color: var(--dark-muted); }
+.title { font-size: var(--title); font-weight: 700; line-height: 1.35; }
+
+.stack > * + * { margin-top: 1.1em; }
+
+/* --------------------------------------------------------------------------
+   Bands
+   -------------------------------------------------------------------------- */
+.band { padding-block: var(--band-y); }
+.band-dark { background: var(--dark); color: var(--dark-text); }
+.band-light { background: var(--paper); color: var(--ink); }
+.band--tight { padding-top: 0; }
+
+/* The line of visibility — the one signature device. A hairline with
+   content above and below. Drawn once, in the hero, on load. */
+.line {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
+  margin: 0;
+}
+.band-dark .line { background: var(--dark-rule); }
+.line--visibility { transform-origin: left; }
+.js .line--visibility { animation: draw 900ms cubic-bezier(.2,.7,.2,1) 200ms both; }
+@keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .js .line--visibility { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+.site-header {
+  background: var(--dark);
+  color: var(--dark-text);
+  padding-block: 22px;
+}
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.logo { display: inline-flex; align-items: center; gap: 10px; }
+.nav { display: flex; align-items: center; gap: 28px; font-size: var(--small); }
+.nav a { color: var(--dark-muted); }
+.nav a:hover { color: var(--dark-text); }
+.nav .btn { color: var(--ink); }
+
+/* --------------------------------------------------------------------------
+   Buttons and links
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  font-size: var(--small);
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 2px;
+  background: var(--light);
+  color: var(--ink);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.btn:hover { background: var(--blue); color: var(--paper); }  /* 16 Aug: brightness(.96) was a 9% change, invisible; the fill goes to the label blue, paper text 5.0:1 */
+.link-arrow { font-size: var(--small); font-weight: 500; }
+.link-arrow:hover { text-decoration: underline; text-underline-offset: 4px; }
+.band-dark .link-arrow { color: var(--dark-text); }
+.band-dark .link-arrow:hover { color: var(--dark-text); }
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+.hero { padding-top: clamp(48px, 6vw, 80px); padding-bottom: clamp(56px, 8vw, 96px); }
+.hero .display--h1 { margin-bottom: 28px; }
+.hero .lede { color: var(--dark-text); margin-bottom: 36px; }
+.hero__actions { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-bottom: 56px; }
+.hero__terms { color: var(--dark-muted); padding-top: 20px; }
+
+/* --------------------------------------------------------------------------
+   Two-column argument sections: eyebrow + H2 left, body right
+   -------------------------------------------------------------------------- */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+.split > .col-body { padding-top: 6px; }
+.split--after-line { padding-top: var(--band-y); }
+@media (max-width: 800px) {
+  .split { grid-template-columns: 1fr; gap: 28px; }
+}
+
+/* --------------------------------------------------------------------------
+   Assessment (How we start)
+   -------------------------------------------------------------------------- */
+.deliverables { margin-top: 0; }
+#how-we-start .col-body { padding-top: 0; }  /* the right column opens on a label since 16 Aug; align it with the eyebrow */
+.deliverable {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  padding-block: 14px;
+  border-top: 1px solid var(--rule);
+}
+.deliverable:last-child { border-bottom: 1px solid var(--rule); }
+.band-dark .deliverable { border-color: var(--dark-rule); }
+.deliverable .num { color: var(--muted); padding-top: 3px; }
+.band-dark .deliverable .num { color: var(--dark-muted); }
+.sublabel { display: block; margin-bottom: 4px; color: var(--blue); }
+.leads { margin-top: 32px; }
+.paths__intro { color: var(--muted); }
+.band-dark .paths__intro { color: var(--dark-muted); }
+.paths {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.path {
+  padding: 20px 22px 22px;
+  border-radius: 2px;
+  background: var(--panel);
+}
+.band-dark .path { background: var(--dark-panel); }
+.path__label { display: block; margin-bottom: 10px; color: var(--ink); }
+.band-dark .path__label { color: var(--dark-muted); }
+.path p { font-size: var(--small); line-height: 1.5; }
+.paths__kicker { margin-top: 18px; }
+@media (max-width: 560px) { .paths { grid-template-columns: 1fr; } }
+.terms { margin-top: 32px; color: var(--blue); }
+.band-dark .terms { color: var(--dark-muted); }
+
+/* --------------------------------------------------------------------------
+   Engagement — 01–04, room for a price column later (add a grid row)
+   -------------------------------------------------------------------------- */
+.map__title { margin-bottom: 40px; max-width: 30ch; }
+.stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+.stage { padding: 24px 24px 28px 0; border-bottom: 1px solid var(--rule); }
+.stage + .stage { padding-left: 24px; border-left: 1px solid var(--rule); }
+.band-dark .stages, .band-dark .stage, .band-dark .stage + .stage { border-color: var(--dark-rule); }
+.stage .num { color: var(--muted); display: block; margin-bottom: 14px; }
+.band-dark .stage .num { color: var(--dark-muted); }
+.stage .title { margin-bottom: 8px; }
+.stage p { color: var(--muted); font-size: var(--small); line-height: 1.5; }
+.band-dark .stage p { color: var(--dark-muted); }
+.stage__note { margin-top: 20px; color: var(--muted); }
+.band-dark .stage__note { color: var(--dark-muted); }
+@media (max-width: 900px) {
+  .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stage:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+@media (max-width: 520px) {
+  .stages { grid-template-columns: 1fr; }
+  .stage + .stage { padding-left: 0; border-left: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Who — Q&A block, rule separated, prose not accordion
+   -------------------------------------------------------------------------- */
+.qa { margin-top: 8px; }
+.qa__item { padding-block: 24px; border-top: 1px solid var(--dark-rule); }
+.qa__item:last-child { border-bottom: 1px solid var(--dark-rule); }
+.qa__item .title { color: var(--dark-text); margin-bottom: 8px; }
+.qa__item p { color: var(--dark-muted); max-width: var(--measure-body); }
+
+/* --------------------------------------------------------------------------
+   Close
+   -------------------------------------------------------------------------- */
+.close .display--poster { margin-bottom: 24px; }
+.close .lede { margin-bottom: 40px; }
+.close__cta { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.close__alt { color: var(--muted); font-size: var(--small); }
+.close__alt a { font-weight: 600; color: var(--blue); }
+.close__alt a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* The one bold run-in on the page, where the argument turns, in the label blue: punctuation, used once (16 Aug). */
+#our-stance .col-body strong { color: var(--blue); }
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--rule);
+  padding-block: 28px;
+  color: var(--muted);
+}
+.site-footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* --------------------------------------------------------------------------
+   Placeholder markers — [[BEN: ...]] must be unmissable. None should ship.
+   -------------------------------------------------------------------------- */
+.marker {
+  background: var(--marker-bg);
+  color: var(--marker-ink);
+  padding: 2px 6px;
+  font-family: var(--font-mono), monospace;
+}
+
+/* ---- C, Ben's review 16 Aug: dark bands carry two layers only ---- */
+/* nav */
+.nav a { color: var(--dark-text); }
+.nav a:hover { color: var(--light); }
+.nav .btn--ghost { background: transparent; color: var(--dark-text); box-shadow: inset 0 0 0 1px var(--dark-text); transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease; }
+.nav .btn--ghost:hover { background: var(--light); color: var(--ink); box-shadow: inset 0 0 0 1px var(--light); }  /* the ghost becomes the hero button on hover */
+/* hero */
+.hero .hero__terms { color: var(--dark-muted); }
+/* label layer on dark: pale light blue */
+.band-dark .eyebrow { color: var(--light); }
+.band-dark .stage .num { color: var(--light); }
+.band-dark .stage__note { color: var(--dark-muted); }
+.band-dark .stage .title, .band-dark .qa__item .title { color: var(--dark-text); }
+/* reading layer on dark: white */
+.band-dark .stage p, .band-dark .qa__item p, .band-dark .lede, .band-dark .muted, .hero .lede { color: var(--dark-text); }

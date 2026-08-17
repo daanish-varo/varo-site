@@ -1,0 +1,29 @@
+# ---------------------------------------------------------------
+# This repository is PUBLIC (or about to be). Only the website
+# belongs here. Everything else lives in the private source
+# repository and is never copied across.
+#
+# Deliberately not a copy of the source repo's .gitignore.
+# ---------------------------------------------------------------
+
+# All markdown except this repository's own README.
+# Fails closed: any document that lands here is ignored by default.
+*.md
+!README.md
+
+# Local tooling.
+.claude/
+
+# Archives.
+*.zip
+*.tar
+*.tar.gz
+
+# OS and editor cruft.
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
